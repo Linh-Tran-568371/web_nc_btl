@@ -1,0 +1,358 @@
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+  <meta charset="UTF-8" />
+  <title>Quản lý phim</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="stylesheet" href="../bootstrap-5.3.6-dist/css/bootstrap.min.css" />
+  <link rel="stylesheet" href="../fontawesome-free-6.7.2-web/css/all.min.css" />
+  <link rel="stylesheet" href="../css/index.css">
+</head>
+
+<body class="p-4">
+  <div class="container">
+    <h2 class="mb-3">Danh sách phim</h2>
+    <button class="btn btn-primary mb-3" data-bs-toggle="modal" data-bs-target="#addMovieModal">Thêm phim</button>
+
+    <table class="table table-bordered">
+      <thead>
+        <tr>
+          <th>#</th>
+          <th>Ảnh</th>
+          <th>Tên phim</th>
+          <th>Năm</th>
+          <th>Thể loại</th>
+          <th>Thời lượng</th>
+          <th>Trạng thái</th>
+          <th>Hành động</th>
+        </tr>
+      </thead>
+      <tbody id="movieTableBody"></tbody>
+    </table>
+    <nav aria-label="Page navigation example">
+      <ul class="pagination">
+        <li class="page-item">
+          <a class="page-link" href="#" aria-label="Previous">
+            <span aria-hidden="true">&laquo;</span>
+            <span class="sr-only">Previous</span>
+          </a>
+        </li>
+        <li class="page-item"><a class="page-link" href="#">1</a></li>
+        <li class="page-item"><a class="page-link" href="#">2</a></li>
+        <li class="page-item"><a class="page-link" href="#">3</a></li>
+        <li class="page-item">
+          <a class="page-link" href="#" aria-label="Next">
+            <span aria-hidden="true">&raquo;</span>
+            <span class="sr-only">Next</span>
+          </a>
+        </li>
+      </ul>
+    </nav>
+  </div>
+
+  <!-- Modal thêm/sửa phim -->
+  <div class="modal fade" id="addMovieModal" tabindex="-1">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">Thêm/Sửa phim</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+        </div>
+        <div class="modal-body">
+          <input id="movieName" class="form-control mb-2" placeholder="Tên phim" />
+          <input id="movieImage" class="form-control mb-2" placeholder="URL ảnh đại diện" />
+          <input id="movieYear" class="form-control mb-2" placeholder="Năm phát hành" />
+          <input id="movieDuration" class="form-control mb-2" placeholder="Thời lượng (phút)" />
+
+          <!-- Genre select -->
+          <select id="movieGenre" class="form-control mb-2">
+            <option value="">-- Chọn thể loại --</option>
+            <option value="Hành động">Hành động</option>
+            <option value="Hài hước">Hài hước</option>
+            <option value="Kinh dị">Kinh dị</option>
+            <option value="Lãng mạn">Lãng mạn</option>
+            <option value="Hoạt hình">Hoạt hình</option>
+            <option value="Phiêu lưu">Phiêu lưu</option>
+          </select>
+
+          <select id="movieStatus" class="form-control mb-2">
+            <option value="Công chiếu">Công chiếu</option>
+            <option value="Sắp chiếu">Sắp chiếu</option>
+            <option value="Ngừng chiếu">Ngừng chiếu</option>
+          </select>
+          <textarea id="movieDescription" class="form-control mb-2" placeholder="Mô tả"></textarea>
+        </div>
+        <div class="modal-footer">
+          <button id="saveMovieBtn" class="btn btn-success">Lưu</button>
+          <button class="btn btn-secondary" data-bs-dismiss="modal">Đóng</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal xem chi tiết -->
+  <div class="modal fade" id="viewMovieModal" tabindex="-1">
+    <div class="modal-dialog modal-lg">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">Chi tiết phim</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+        </div>
+        <div class="modal-body">
+          <p><strong>Ảnh:</strong><br /><img id="viewImage" class="img-fluid rounded mb-2" /></p>
+          <p><strong>Tên phim:</strong> <span id="viewName"></span></p>
+          <p><strong>Năm:</strong> <span id="viewYear"></span></p>
+          <p><strong>Thời lượng:</strong> <span id="viewDuration"></span> phút</p>
+          <p><strong>Thể loại:</strong> <span id="viewGenre"></span></p>
+          <p><strong>Trạng thái:</strong> <span id="viewStatus"></span></p>
+          <p><strong>Mô tả:</strong> <span id="viewDescription"></span></p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal xác nhận xóa -->
+  <div class="modal fade" id="deleteConfirmModal" tabindex="-1">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">Xác nhận xóa</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+        </div>
+        <div class="modal-body">
+          Bạn có chắc chắn muốn xóa phim này không?
+        </div>
+        <div class="modal-footer">
+          <button id="confirmDeleteBtn" class="btn btn-danger">Xóa</button>
+          <button class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Scripts -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+  <script>
+    const movieName = document.getElementById("movieName");
+    const movieImage = document.getElementById("movieImage");
+    const movieYear = document.getElementById("movieYear");
+    const movieDuration = document.getElementById("movieDuration");
+    const movieGenre = document.getElementById("movieGenre");
+    const movieStatus = document.getElementById("movieStatus");
+    const movieDescription = document.getElementById("movieDescription");
+
+    const saveMovieBtn = document.getElementById("saveMovieBtn");
+    const movieTableBody = document.getElementById("movieTableBody");
+
+    const viewName = document.getElementById("viewName");
+    const viewImage = document.getElementById("viewImage");
+    const viewYear = document.getElementById("viewYear");
+    const viewDuration = document.getElementById("viewDuration");
+    const viewGenre = document.getElementById("viewGenre");
+    const viewStatus = document.getElementById("viewStatus");
+    const viewDescription = document.getElementById("viewDescription");
+
+    const deleteConfirmModal = new bootstrap.Modal(document.getElementById("deleteConfirmModal"));
+    const confirmDeleteBtn = document.getElementById("confirmDeleteBtn");
+
+    let movies = [
+      {
+        name: "Avengers: Endgame",
+        image: "https://th.bing.com/th/id/OIP.cPFL_ymi5l8PAJWcKZk3GQAAAA?rs=1&pid=ImgDetMain",
+        year: "2019",
+        duration: "181",
+        genre: "Hành động",
+        status: "Công chiếu",
+        description: "Trận chiến cuối cùng của các Avengers chống lại Thanos."
+      },
+      {
+        name: "Inception",
+        image: "https://th.bing.com/th/id/OIP.KvWY-Lps3p8FLMjUcFTK3wHaKz?rs=1&pid=ImgDetMain",
+        year: "2010",
+        duration: "148",
+        genre: "Khoa học viễn tưởng",
+        status: "Công chiếu",
+        description: "Một tên trộm chuyên đánh cắp thông tin bằng cách xâm nhập vào giấc mơ."
+      },
+      {
+        name: "Interstellar",
+        image: "https://th.bing.com/th/id/OIF.5RzvrLkTKxQQolUiMS15iQ?w=115&h=180&c=7&r=0&o=5&dpr=1.3&pid=1.7",
+        year: "2014",
+        duration: "169",
+        genre: "Khoa học viễn tưởng",
+        status: "Công chiếu",
+        description: "Cuộc hành trình xuyên không gian để tìm nơi sinh sống mới cho nhân loại."
+      },
+      {
+        name: "Parasite",
+        image: "https://th.bing.com/th/id/OIP.A7ThU1Uc5EfhIntAdN0E9gHaJ4?w=134&h=180&c=7&r=0&o=5&dpr=1.3&pid=1.7",
+        year: "2019",
+        duration: "132",
+        genre: "Tâm lý, Kịch tính",
+        status: "Công chiếu",
+        description: "Cuộc sống hai tầng lớp đối lập của gia đình giàu và nghèo tại Hàn Quốc."
+      },
+      {
+        name: "Joker",
+        image: "https://th.bing.com/th/id/OIP.fe75aHt9tyUWG2-QqxDfPQHaLG?w=124&h=186&c=7&r=0&o=5&dpr=1.3&pid=1.7",
+        year: "2019",
+        duration: "122",
+        genre: "Tâm lý, Tội phạm",
+        status: "Công chiếu",
+        description: "Nguồn gốc của nhân vật phản diện biểu tượng trong thế giới DC."
+      },
+      {
+        name: "The Dark Knight",
+        image: "https://th.bing.com/th/id/OIP.iJ0B4QHWW_LdN-wEoTAQLAHaLH?w=122&h=183&c=7&r=0&o=5&dpr=1.3&pid=1.7",
+        year: "2008",
+        duration: "152",
+        genre: "Hành động, Tội phạm",
+        status: "Công chiếu",
+        description: "Batman đối đầu với Joker để bảo vệ Gotham."
+      },
+      {
+        name: "Your Name",
+        image: "https://th.bing.com/th/id/OIP.lbiQBGwfLHIKuEgcy_TisAHaKl?rs=1&pid=ImgDetMain",
+        year: "2016",
+        duration: "106",
+        genre: "Hoạt hình, Lãng mạn",
+        status: "Công chiếu",
+        description: "Hai học sinh hoán đổi thân xác và dần nảy sinh tình cảm."
+      },
+      {
+        name: "Dune: Part One",
+        image: "https://th.bing.com/th/id/R.c33035310be470a0416a29de71be9bee?rik=qKePYW%2fFDGo4VQ&pid=ImgRaw&r=0",
+        year: "2021",
+        duration: "155",
+        genre: "Hành động, Khoa học viễn tưởng",
+        status: "Công chiếu",
+        description: "Một gia tộc cao quý chiến đấu để bảo vệ hành tinh sa mạc và kho báu quý giá."
+      },
+      {
+        name: "Spider-Man: No Way Home",
+        image: "https://th.bing.com/th/id/OIP.FMrkGJ7l31vjneqmkGWgfwHaK_?rs=1&pid=ImgDetMain",
+        year: "2021",
+        duration: "148",
+        genre: "Hành động, Phiêu lưu",
+        status: "Công chiếu",
+        description: "Peter Parker nhờ Doctor Strange xóa bỏ ký ức công chúng về Spider-Man."
+      },
+      {
+        name: "Everything Everywhere All At Once",
+        image: "https://th.bing.com/th/id/R.973213d5407a85d05c72d78b71290ef8?rik=8DPAKqdbrfT%2fzg&pid=ImgRaw&r=0",
+        year: "2022",
+        duration: "139",
+        genre: "Hài, Khoa học viễn tưởng",
+        status: "Công chiếu",
+        description: "Một người phụ nữ bình thường bị cuốn vào đa vũ trụ và số phận của chính mình."
+      }
+
+    ];
+    let editIndex = -1;
+    let deleteIndex = -1;
+
+    function resetForm() {
+      movieName.value = "";
+      movieImage.value = "";
+      movieYear.value = "";
+      movieDuration.value = "";
+      movieGenre.value = "";
+      movieStatus.value = "Công chiếu";
+      movieDescription.value = "";
+      editIndex = -1;
+    }
+
+    function renderMovies() {
+      movieTableBody.innerHTML = "";
+      movies.forEach((m, index) => {
+        movieTableBody.innerHTML += `
+          <tr>
+            <td>${index + 1}</td>
+            <td><img src="${m.image || 'https://via.placeholder.com/80x50'}" width="80"/></td>
+            <td>${m.name}</td>
+            <td>${m.year}</td>
+            <td>${m.genre}</td>
+            <td>${m.duration} phút</td>
+            <td>${m.status}</td>
+            <td>
+              <button class="btn btn-info btn-sm" onclick="viewMovie(${index})" data-bs-toggle="modal" data-bs-target="#viewMovieModal"><i class="fa-solid fa-info"></i></button>
+              <button class="btn btn-warning btn-sm" onclick="editMovie(${index})" data-bs-toggle="modal" data-bs-target="#addMovieModal"><i class="fa-solid fa-pen"></i></button>
+              <button class="btn btn-danger btn-sm" onclick="showDeleteModal(${index})"><i class="fa-solid fa-trash"></i></button>
+            </td>
+          </tr>
+        `;
+      });
+    }
+
+    function viewMovie(index) {
+      const m = movies[index];
+      viewImage.src = m.image || "https://via.placeholder.com/300x200?text=No+Image";
+      viewName.textContent = m.name;
+      viewYear.textContent = m.year;
+      viewDuration.textContent = m.duration;
+      viewGenre.textContent = m.genre;
+      viewStatus.textContent = m.status;
+      viewDescription.textContent = m.description;
+    }
+
+    function editMovie(index) {
+      const m = movies[index];
+      movieName.value = m.name;
+      movieImage.value = m.image || "";
+      movieYear.value = m.year;
+      movieDuration.value = m.duration;
+      movieGenre.value = m.genre;
+      movieStatus.value = m.status;
+      movieDescription.value = m.description;
+      editIndex = index;
+    }
+
+    function showDeleteModal(index) {
+      deleteIndex = index;
+      deleteConfirmModal.show();
+    }
+
+    confirmDeleteBtn.addEventListener("click", () => {
+      if (deleteIndex !== -1) {
+        movies.splice(deleteIndex, 1);
+        // localStorage.setItem("movies", JSON.stringify(movies));
+        renderMovies();
+        deleteConfirmModal.hide();
+      }
+    });
+
+    saveMovieBtn.addEventListener("click", () => {
+      const name = movieName.value.trim();
+      const image = movieImage.value.trim();
+      const year = movieYear.value.trim();
+      const duration = movieDuration.value.trim();
+      const genre = movieGenre.value;
+      const status = movieStatus.value;
+      const description = movieDescription.value.trim();
+
+      if (!name || !year || !duration || !genre) {
+        alert("Vui lòng nhập đầy đủ thông tin!");
+        return;
+      }
+
+      const movie = { name, image, year, duration, genre, status, description };
+
+      if (editIndex === -1) {
+        movies.push(movie);
+      } else {
+        movies[editIndex] = movie;
+      }
+
+      // localStorage.setItem("movies", JSON.stringify(movies));
+      renderMovies();
+      resetForm();
+      const modal = bootstrap.Modal.getInstance(document.getElementById("addMovieModal"));
+      modal.hide();
+    });
+
+    renderMovies();
+  </script>
+</body>
+
+</html>

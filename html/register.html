@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+  <meta charset="UTF-8">
+  <title>Đăng ký</title>
+  <link rel="stylesheet" href="../css/style_register.css">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+
+</head>
+
+<body>
+    <div class="container my-5">
+  <div class="row justify-content-center">
+    <div class="col-md-6" style="border: 1px solid rgb(170, 194, 205); border-radius: 10px;">
+      <div class="row">
+        <!-- Form đăng ký -->
+        <div class="col-md-6 mt-3">
+          <h3 class="text-light">Đăng ký</h3>
+          <p class="text-light">Tạo tài khoản mới để sử dụng dịch vụ</p>
+          <form>
+            <div class="mb-3">
+              <label for="username" class="text-light">Tên đăng nhập</label>
+              <input type="text" id="username" name="username" class="form-control" required>
+            </div>
+            <div class="mb-3">
+              <label for="email" class="text-light">Email</label>
+              <input type="email" id="email" name="email" class="form-control" required>
+            </div>
+            <div class="mb-3">
+              <label for="password" class="text-light">Mật khẩu</label>
+              <input type="password" id="password" name="password" class="form-control" required>
+            </div>
+            <div class="mb-3">
+              <label for="confirm_password" class="text-light">Nhập lại mật khẩu</label>
+              <input type="password" id="confirm-password" name="confirm-password" class="form-control" required>
+            </div>
+            <div class="d-flex justify-content-between align-items-center mb-3">
+              <button class="btn btn-primary" type="submit" style="width: 150px">Đăng ký</button>
+              <a href="login.html" class="text-decoration-none text-light">Đã có tài khoản?</a>
+            </div>
+          </form>
+        </div>
+
+        <!-- Thông tin giới thiệu -->
+        <div class="col-md-6 bg-primary text-white text-center p-4 rounded">
+          <h3>Chào mừng!</h3>
+          <p>Hãy tham gia cộng đồng xem phim của chúng tôi và tận hưởng trải nghiệm tuyệt vời.</p>
+          <img src="../images/icon_movie.png" alt="Join Us" class="img-fluid mt-2" style="max-height: 120px;">
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="../js/user.js"></script>
+  <script src="../js/script_register.js"></script>
+  <script>
+    document.querySelector("form").addEventListener("submit", registerUser);
+  </script>
+
+</body>
+
+</html>

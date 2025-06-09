@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Quản lý Bình luận & Đánh giá</title>
+    <link rel="stylesheet" href="../bootstrap-5.3.6-dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="../fontawesome-free-6.7.2-web/css/all.min.css" />
+    <link rel="stylesheet" href="../css/index.css">
+    <style>
+        .search-container {
+            margin-bottom: 15px;
+            text-align: right;
+        }
+
+        input[type="text"] {
+            padding: 6px;
+            width: 300px;
+            font-size: 14px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 10px;
+        }
+
+        th,
+        td {
+            padding: 10px;
+            border: 1px solid #ddd;
+            text-align: left;
+            vertical-align: middle;
+        }
+
+        th {
+            background-color: #f2f2f2;
+        }
+
+        button {
+            padding: 6px 10px;
+            margin: 2px;
+            font-size: 14px;
+            cursor: pointer;
+        }
+
+        button.edit {
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+        }
+
+        button.delete {
+            background-color: #f44336;
+            color: white;
+            border: none;
+        }
+    </style>
+</head>
+
+<body class="py-2 px-4">
+    <div class="mt-4">
+        <h4 class="fw-bold">Quản lí bình luận và đánh giá</h4>
+    </div>
+
+    <table id="commentsTable">
+        <thead>
+            <tr>
+                <th>Phim</th>
+                <th>Người bình luận</th>
+                <th>Nội dung</th>
+                <th>Đánh giá</th>
+                <th>Ngày bình luận</th>
+                <th>Hành động</th>
+            </tr>
+        </thead>
+        <tbody></tbody>
+    </table>
+    <nav aria-label="Page navigation example" class="mt-3">
+      <ul class="pagination">
+        <li class="page-item">
+          <a class="page-link" href="#" aria-label="Previous">
+            <span aria-hidden="true">&laquo;</span>
+            <span class="sr-only">Previous</span>
+          </a>
+        </li>
+        <li class="page-item"><a class="page-link" href="#">1</a></li>
+        <li class="page-item"><a class="page-link" href="#">2</a></li>
+        <li class="page-item"><a class="page-link" href="#">3</a></li>
+        <li class="page-item">
+          <a class="page-link" href="#" aria-label="Next">
+            <span aria-hidden="true">&raquo;</span>
+            <span class="sr-only">Next</span>
+          </a>
+        </li>
+      </ul>
+    </nav>
+
+    <!-- Modal Sửa -->
+    <div class="modal fade" id="editModal" tabindex="-1" aria-labelledby="editModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Chỉnh sửa bình luận</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="editForm">
+                        <div class="mb-3">
+                            <label for="editContent" class="form-label">Nội dung</label>
+                            <textarea class="form-control" id="editContent" rows="3"></textarea>
+                        </div>
+                        <div class="mb-3">
+                            <label for="editRating" class="form-label">Đánh giá (1-5)</label>
+                            <input type="number" class="form-control" id="editRating" min="1" max="5" />
+                        </div>
+                        <button type="submit" class="btn btn-success">Lưu thay đổi</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Xóa -->
+    <div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-sm">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Xác nhận xóa</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    Bạn có chắc chắn muốn xóa bình luận này?
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
+                    <button type="button" class="btn btn-danger" id="confirmDeleteBtn">Xóa</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="../bootstrap-5.3.6-dist/js/bootstrap.bundle.min.js"></script>
+
+    <script>
+        const movies = [
+            { id: 0, name: "Avengers: Endgame" },
+            { id: 1, name: "Parasite" },
+            { id: 2, name: "Interstellar" },
+            { id: 3, name: "The Dark Knight" },
+            { id: 4, name: "Your Name" }
+        ];
+
+        const comments = [
+            { movieId: 0, user: "Nguyễn Văn An", content: "Phim rất hấp dẫn và cảm động!", rating: 5, date: "2025-06-01 10:00" },
+            { movieId: 1, user: "Trần Thị Bình", content: "Cốt truyện bất ngờ, rất đáng xem.", rating: 4, date: "2025-06-02 14:15" },
+            { movieId: 2, user: "Lê Văn Cường", content: "Hiệu ứng đẹp nhưng hơi khó hiểu.", rating: 3, date: "2025-06-03 09:30" },
+            { movieId: 3, user: "Phạm Thị Dung", content: "Batman ngầu quá trời!", rating: 5, date: "2025-06-04 11:20" },
+            { movieId: 4, user: "Hoàng Minh", content: "Nhạc phim tuyệt vời, nội dung sâu sắc.", rating: 5, date: "2025-06-05 08:45" },
+            { movieId: 0, user: "Lưu Hương", content: "Khá dài nhưng xứng đáng thời gian.", rating: 4, date: "2025-06-06 17:10" },
+            { movieId: 1, user: "Trịnh Quốc", content: "Hơi chậm ở đoạn đầu nhưng kết thúc ấn tượng.", rating: 3, date: "2025-06-07 12:30" },
+            { movieId: 2, user: "Phan Thị Yến", content: "Một bộ phim khoa học viễn tưởng cực hay!", rating: 5, date: "2025-06-08 09:00" },
+            { movieId: 3, user: "Ngô Thanh", content: "Diễn xuất đỉnh cao, phim rất cuốn hút.", rating: 5, date: "2025-06-09 19:20" },
+            { movieId: 4, user: "Mai Tường Vy", content: "Một trải nghiệm điện ảnh rất lãng mạn.", rating: 4, date: "2025-06-10 20:45" }
+        ];
+
+
+        const tbody = document.querySelector("#commentsTable tbody");
+        let editIndex = null;
+        let deleteIndex = null;
+
+        function renderStars(rating) {
+            return "⭐".repeat(rating) + "☆".repeat(5 - rating);
+        }
+
+        function renderTable(filterText = "") {
+            tbody.innerHTML = "";
+            const filteredComments = comments.filter(c => {
+                const movieName = movies.find(m => m.id === c.movieId)?.name || "";
+                return movieName.toLowerCase().includes(filterText.toLowerCase());
+            });
+
+            filteredComments.forEach((c, index) => {
+                const movieName = movies.find(m => m.id === c.movieId)?.name || "Không xác định";
+                const tr = document.createElement("tr");
+                tr.innerHTML = `
+          <td>${movieName}</td>
+          <td>${c.user}</td>
+          <td>${c.content}</td>
+          <td>${renderStars(c.rating)}</td>
+          <td>${c.date}</td>
+          <td>
+            <button class="edit" onclick="editComment(${index})">Sửa</button>
+            <button class="delete" onclick="deleteComment(${index})">Xóa</button>
+          </td>
+        `;
+                tbody.appendChild(tr);
+            });
+        }
+
+        function editComment(index) {
+            editIndex = index;
+            const c = comments[index];
+            document.getElementById("editContent").value = c.content;
+            document.getElementById("editRating").value = c.rating;
+            const editModal = new bootstrap.Modal(document.getElementById("editModal"));
+            editModal.show();
+        }
+
+        document.getElementById("editForm").addEventListener("submit", function (e) {
+            e.preventDefault();
+            const content = document.getElementById("editContent").value.trim();
+            const rating = parseInt(document.getElementById("editRating").value);
+            if (content && rating >= 1 && rating <= 5) {
+                comments[editIndex].content = content;
+                comments[editIndex].rating = rating;
+                bootstrap.Modal.getInstance(document.getElementById("editModal")).hide();
+                renderTable();
+            } else {
+                alert("Vui lòng nhập đúng nội dung và đánh giá từ 1 đến 5.");
+            }
+        });
+
+        function deleteComment(index) {
+            deleteIndex = index;
+            const deleteModal = new bootstrap.Modal(document.getElementById("deleteModal"));
+            deleteModal.show();
+        }
+
+        document.getElementById("confirmDeleteBtn").addEventListener("click", function () {
+            comments.splice(deleteIndex, 1);
+            bootstrap.Modal.getInstance(document.getElementById("deleteModal")).hide();
+            renderTable();
+        });
+
+        // Hiển thị ban đầu
+        renderTable();
+    </script>
+</body>
+
+</html>

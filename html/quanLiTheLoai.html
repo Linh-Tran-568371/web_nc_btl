@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Quản lí thể loại phim</title>
+  <link rel="stylesheet" href="../bootstrap-5.3.6-dist/css/bootstrap.min.css" />
+  <link rel="stylesheet" href="../fontawesome-free-6.7.2-web/css/all.min.css" />
+  <style>
+    button {
+      outline: none;
+      border: none;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="container py-3">
+    <h4 class="fw-bold mb-4">Quản lí thể loại phim</h4>
+
+    <button class="btn btn-primary mb-3" data-bs-toggle="modal" data-bs-target="#addCategoryModal">
+      <i class="fa-solid fa-plus"></i> Thêm thể loại
+    </button>
+
+    <table class="table table-bordered align-middle">
+      <thead class="table-dark">
+        <tr>
+          <th>#</th>
+          <th>Tên thể loại</th>
+          <th>Mô tả</th>
+          <th>Chức năng</th>
+        </tr>
+      </thead>
+      <tbody id="categoryTableBody">
+        <!-- Dữ liệu sẽ render ở đây -->
+      </tbody>
+    </table>
+
+  </div>
+
+  <!-- Modal Thêm thể loại -->
+  <div class="modal fade" id="addCategoryModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">Thêm thể loại phim</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+        </div>
+        <div class="modal-body">
+          <input class="form-control mb-2" id="addCategoryName" placeholder="Tên thể loại" />
+          <textarea class="form-control mb-2" id="addCategoryDesc" placeholder="Mô tả" rows="3"></textarea>
+        </div>
+        <div class="modal-footer">
+          <button class="btn btn-secondary" data-bs-dismiss="modal">Đóng</button>
+          <button class="btn btn-primary" id="addCategoryBtn">Thêm</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal Sửa thể loại -->
+  <div class="modal fade" id="editCategoryModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">Chỉnh sửa thể loại</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+        </div>
+        <div class="modal-body">
+          <input class="form-control mb-2" id="editCategoryName" placeholder="Tên thể loại" />
+          <textarea class="form-control mb-2" id="editCategoryDesc" placeholder="Mô tả" rows="3"></textarea>
+        </div>
+        <div class="modal-footer">
+          <button class="btn btn-secondary" data-bs-dismiss="modal">Đóng</button>
+          <button class="btn btn-warning" id="saveEditCategoryBtn">Lưu</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal Xác nhận xóa -->
+  <div class="modal fade" id="deleteCategoryConfirmModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">Xác nhận xóa</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+        </div>
+        <div class="modal-body">Bạn có chắc muốn xóa thể loại này không?</div>
+        <div class="modal-footer">
+          <button class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
+          <button class="btn btn-danger" id="confirmDeleteCategoryBtn">Xóa</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal Xem chi tiết -->
+  <div class="modal fade" id="viewCategoryModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">Thông tin thể loại phim</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+        </div>
+        <div class="modal-body">
+          <p><strong>Tên thể loại:</strong> <span id="viewCategoryName"></span></p>
+          <p><strong>Mô tả:</strong> <span id="viewCategoryDesc"></span></p>
+        </div>
+        <div class="modal-footer">
+          <button class="btn btn-secondary" data-bs-dismiss="modal">Đóng</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="../bootstrap-5.3.6-dist/js/bootstrap.bundle.min.js"></script>
+  <script>
+    let categories = [
+  {
+    name: "Hành động",
+    description: "Phim với nhiều pha hành động gay cấn, kịch tính.",
+  },
+  {
+    name: "Hài hước",
+    description: "Phim mang lại tiếng cười và sự giải trí nhẹ nhàng.",
+  },
+  {
+    name: "Tâm lý",
+    description: "Phim khai thác sâu tâm lý và cảm xúc nhân vật.",
+  },
+  {
+    name: "Tình cảm",
+    description: "Phim kể về chuyện tình yêu, cảm xúc lãng mạn.",
+  },
+  {
+    name: "Kinh dị",
+    description: "Phim mang đến cảm giác hồi hộp, sợ hãi và kinh hoàng.",
+  },
+  {
+    name: "Phiêu lưu",
+    description: "Phim khám phá, mạo hiểm ở những vùng đất mới lạ.",
+  },
+  {
+    name: "Viễn tưởng",
+    description: "Phim dựa trên các yếu tố khoa học viễn tưởng và tương lai.",
+  },
+  {
+    name: "Hoạt hình",
+    description: "Phim dành cho thiếu nhi và mọi lứa tuổi, thường là phim hoạt hình.",
+  },
+  {
+    name: "Hình sự",
+    description: "Phim xoay quanh các vụ án, điều tra và tội phạm.",
+  },
+  {
+    name: "Tài liệu",
+    description: "Phim giới thiệu về các sự kiện, con người hoặc hiện tượng có thật.",
+  },
+  {
+    name: "Chiến tranh",
+    description: "Phim về các trận chiến, quân sự và lịch sử chiến tranh.",
+  },
+];
+
+
+    const categoryTableBody = document.getElementById('categoryTableBody');
+
+    // Modal elements
+    const addCategoryBtn = document.getElementById('addCategoryBtn');
+    const saveEditCategoryBtn = document.getElementById('saveEditCategoryBtn');
+    const confirmDeleteCategoryBtn = document.getElementById('confirmDeleteCategoryBtn');
+
+    const addCategoryName = document.getElementById('addCategoryName');
+    const addCategoryDesc = document.getElementById('addCategoryDesc');
+
+    const editCategoryName = document.getElementById('editCategoryName');
+    const editCategoryDesc = document.getElementById('editCategoryDesc');
+
+    const viewCategoryName = document.getElementById('viewCategoryName');
+    const viewCategoryDesc = document.getElementById('viewCategoryDesc');
+
+    const addCategoryModal = new bootstrap.Modal(document.getElementById('addCategoryModal'));
+    const editCategoryModal = new bootstrap.Modal(document.getElementById('editCategoryModal'));
+    const deleteCategoryConfirmModal = new bootstrap.Modal(document.getElementById('deleteCategoryConfirmModal'));
+    const viewCategoryModal = new bootstrap.Modal(document.getElementById('viewCategoryModal'));
+
+    let editIndex = -1;
+    let deleteIndex = -1;
+
+    function renderTable() {
+      categoryTableBody.innerHTML = categories.map((cat, i) => `
+        <tr>
+          <td>${i + 1}</td>
+          <td>${cat.name}</td>
+          <td>${cat.description}</td>
+          <td>
+            <button class="btn btn-success" onclick="viewCategory(${i})"><i class="fa-solid fa-info"></i></button>
+            <button class="btn btn-warning mx-2" onclick="editCategory(${i})"><i class="fa-solid fa-pen"></i></button>
+            <button class="btn btn-danger" onclick="confirmDeleteCategory(${i})"><i class="fa-solid fa-trash"></i></button>
+          </td>
+        </tr>
+      `).join('');
+    }
+
+    // Thêm thể loại
+    addCategoryBtn.addEventListener('click', () => {
+      const name = addCategoryName.value.trim();
+      const description = addCategoryDesc.value.trim();
+
+      if (!name) {
+        alert("Vui lòng nhập tên thể loại.");
+        return;
+      }
+
+      categories.push({ name, description });
+      addCategoryModal.hide();
+      addCategoryName.value = '';
+      addCategoryDesc.value = '';
+      renderTable();
+    });
+
+    // Sửa thể loại
+    function editCategory(index) {
+      editIndex = index;
+      const cat = categories[index];
+      editCategoryName.value = cat.name;
+      editCategoryDesc.value = cat.description;
+      editCategoryModal.show();
+    }
+
+    saveEditCategoryBtn.addEventListener('click', () => {
+      const name = editCategoryName.value.trim();
+      const description = editCategoryDesc.value.trim();
+
+      if (!name) {
+        alert("Vui lòng nhập tên thể loại.");
+        return;
+      }
+
+      categories[editIndex] = { name, description };
+      editCategoryModal.hide();
+      renderTable();
+    });
+
+    // Xóa thể loại
+    function confirmDeleteCategory(index) {
+      deleteIndex = index;
+      deleteCategoryConfirmModal.show();
+    }
+
+    confirmDeleteCategoryBtn.addEventListener('click', () => {
+      if (deleteIndex > -1) {
+        categories.splice(deleteIndex, 1);
+        deleteCategoryConfirmModal.hide();
+        renderTable();
+      }
+    });
+
+    // Xem chi tiết thể loại
+    function viewCategory(index) {
+      const cat = categories[index];
+      viewCategoryName.textContent = cat.name;
+      viewCategoryDesc.textContent = cat.description;
+      viewCategoryModal.show();
+    }
+
+    // Khởi tạo bảng lúc đầu
+    renderTable();
+  </script>
+</body>
+
+</html>

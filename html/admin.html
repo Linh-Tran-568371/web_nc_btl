@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Quản lý Admin</title>
+    <link rel="stylesheet" href="../css/style_admin.css">
+</head>
+
+<body>
+    <div class="container">
+        <h1>Trang Quản Lý Admin</h1>
+
+        <section>
+            <h2>📽️ Danh sách Phim</h2>
+            <table id="movie-table">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Ảnh</th>
+                        <th>Tên</th>
+                        <th>Thể loại</th>
+                        <th>Điểm</th>
+                        <th>Hành động</th>
+                    </tr>
+                </thead>
+                <tbody></tbody>
+            </table>
+            <h3>➕ Thêm Phim Mới</h3>
+            <form id="addMovieForm">
+                <input type="text" placeholder="Tên phim" id="tenPhim" required>
+                <input type="text" placeholder="Thể loại (cách nhau bởi dấu phẩy)" id="theLoaiPhim" required>
+                <input type="number" step="0.1" placeholder="Điểm" id="diemPhim" required>
+                <input type="text" placeholder="Link video" id="videoPhim" required>
+                <input type="text" placeholder="Ảnh video" id="anhPhim" required>
+                <button type="submit">Thêm phim</button>
+            </form>
+        </section>
+
+        <section>
+            <h2>👤 Danh sách Người dùng</h2>
+            <table id="user-table">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Tên đăng nhập</th>
+                        <th>Email</th>
+                        <th>Quyền hạn</th>
+                        <th>Hành động</th>
+                    </tr>
+                </thead>
+                <tbody></tbody>
+            </table>
+            <h3>➕ Thêm Người Dùng</h3>
+            <form id="addUserForm">
+                <input type="text" placeholder="Tên đăng nhập" id="tenUser" required>
+                <input type="email" placeholder="Email" id="emailUser" required>
+                <input type="password" placeholder="Mật khẩu" id="passUser" required>
+                <select id="roleUser">
+                    <option value="user">User</option>
+                    <option value="admin">Admin</option>
+                </select>
+                <button type="submit">Thêm người dùng</button>
+            </form>
+        </section>
+    </div>
+
+    <script src="../js/script_admin.js"></script>
+</body>
+
+</html>

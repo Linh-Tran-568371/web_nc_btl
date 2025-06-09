@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Quản lí người dùng</title>
+    <link rel="stylesheet" href="../bootstrap-5.3.6-dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="../fontawesome-free-6.7.2-web/css/all.min.css" />
+    <link rel="stylesheet" href="../css/index.css">
+    <style>
+        button {
+            outline: none;
+            border: none;
+        }
+
+        img {
+            border-radius: 50%;
+        }
+    </style>
+</head>
+
+<body class="">
+    <div class=" py-2 px-4">
+        <div class="mt-4">
+            <h4 class="fw-bold">Quản lí người dùng</h4>
+        </div>
+        <div class="mt-4">
+            <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addUserModal">
+                <i class="fa-solid fa-plus"></i> Thêm
+            </button>
+        </div>
+        <div class="mt-3">
+            <table class="table table-bordered align-middle">
+                <thead class="table-dark">
+                    <tr>
+                        <th>#</th>
+                        <th>Ảnh</th>
+                        <th>Tên đăng nhập</th>
+                        <th>Email</th>
+                        <th>Chức năng</th>
+                    </tr>
+                </thead>
+                <tbody id="userTableBody">
+                    <!-- User rows will be added here -->
+                </tbody>
+            </table>
+        </div>
+        <nav aria-label="Page navigation example" class="mt-4">
+            <ul class="pagination">
+                <li class="page-item">
+                    <a class="page-link" href="#" aria-label="Previous">
+                        <span aria-hidden="true">&laquo;</span>
+                        <span class="sr-only">Previous</span>
+                    </a>
+                </li>
+                <li class="page-item"><a class="page-link" href="#">1</a></li>
+                <li class="page-item"><a class="page-link" href="#">2</a></li>
+                <li class="page-item"><a class="page-link" href="#">3</a></li>
+                <li class="page-item">
+                    <a class="page-link" href="#" aria-label="Next">
+                        <span aria-hidden="true">&raquo;</span>
+                        <span class="sr-only">Next</span>
+                    </a>
+                </li>
+            </ul>
+        </nav>
+    </div>
+
+    <!-- Add User Modal -->
+    <div class="modal fade" id="addUserModal" tabindex="-1" aria-labelledby="addUserModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Thêm người dùng</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <input class="form-control mb-2" id="addUsername" placeholder="Tên đăng nhập" />
+                    <input class="form-control mb-2" id="addEmail" placeholder="Email" />
+                    <input class="form-control mb-2" id="addPassword" placeholder="Mật khẩu" type="password" />
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-secondary" data-bs-dismiss="modal">Đóng</button>
+                    <button class="btn btn-primary" id="addUserBtn">Thêm</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Edit User Modal -->
+    <div class="modal fade" id="editUserModal" tabindex="-1" aria-labelledby="editUserModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Chỉnh sửa người dùng</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <input class="form-control mb-2" id="editUsername" placeholder="Tên đăng nhập" />
+                    <input class="form-control mb-2" id="editEmail" placeholder="Email" />
+                    <input class="form-control mb-2" id="editPassword" placeholder="Mật khẩu" type="password" />
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-secondary" data-bs-dismiss="modal">Đóng</button>
+                    <button class="btn btn-warning" id="saveEditBtn">Lưu</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Delete Confirmation Modal -->
+    <div class="modal fade" id="deleteConfirmModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Xác nhận xóa</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">Bạn có chắc muốn xóa người dùng này không?</div>
+                <div class="modal-footer">
+                    <button class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
+                    <button class="btn btn-danger" id="confirmDeleteBtn">Xóa</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- View User Modal -->
+    <div class="modal fade" id="viewUserModal" tabindex="-1" aria-labelledby="viewUserModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Thông tin người dùng</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <p><strong>Tên đăng nhập:</strong> <span id="viewUsername"></span></p>
+                    <p><strong>Email:</strong> <span id="viewEmail"></span></p>
+                    <p><strong>Mật khẩu:</strong> <span id="viewPassword"></span></p>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-secondary" data-bs-dismiss="modal">Đóng</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="../bootstrap-5.3.6-dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        let users = [
+            {
+                username: "nguyenvana",
+                email: "vana@gmail.com",
+                password: "123456"
+            },
+            {
+                username: "tranthib",
+                email: "btran@yahoo.com",
+                password: "matkhau1"
+            },
+            {
+                username: "lequangc",
+                email: "cle@gmail.com",
+                password: "abc123"
+            },
+            {
+                username: "phamthid",
+                email: "dpham@hotmail.com",
+                password: "pass789"
+            },
+            {
+                username: "hoangminh",
+                email: "minhh@outlook.com",
+                password: "minh321"
+            },
+            {
+                username: "luuhuong",
+                email: "huong.luu@gmail.com",
+                password: "huong456"
+            },
+            {
+                username: "ngothanh",
+                email: "thanh.ngo@yahoo.com",
+                password: "ngo999"
+            }
+        ];
+
+        document.addEventListener('DOMContentLoaded', () => {
+            renderTable();
+        });
+
+        let editIndex = -1;
+        let deleteIndex = -1;
+
+        const userTableBody = document.getElementById('userTableBody');
+        const addUserBtn = document.getElementById('addUserBtn');
+        const saveEditBtn = document.getElementById('saveEditBtn');
+        const confirmDeleteBtn = document.getElementById('confirmDeleteBtn');
+
+        const addUsername = document.getElementById('addUsername');
+        const addEmail = document.getElementById('addEmail');
+        const addPassword = document.getElementById('addPassword');
+
+        const editUsername = document.getElementById('editUsername');
+        const editEmail = document.getElementById('editEmail');
+        const editPassword = document.getElementById('editPassword');
+
+        const addUserModal = new bootstrap.Modal(document.getElementById('addUserModal'));
+        const editUserModal = new bootstrap.Modal(document.getElementById('editUserModal'));
+        const deleteConfirmModal = new bootstrap.Modal(document.getElementById('deleteConfirmModal'));
+
+        const viewUserModal = new bootstrap.Modal(document.getElementById('viewUserModal'));
+        const viewUsername = document.getElementById('viewUsername');
+        const viewEmail = document.getElementById('viewEmail');
+        const viewPassword = document.getElementById('viewPassword');
+
+
+        function renderTable() {
+            userTableBody.innerHTML = users.map((user, i) => `
+        <tr>
+          <td>${i + 1}</td>
+          <td><img src="../image/chillGuy.jpg" width="50" height="50" /></td>
+          <td>${user.username}</td>
+          <td>${user.email}</td>
+          <td>
+            <button class="btn btn-success" onclick="viewUser(${i})"><i class="fa-solid fa-info"></i></button>
+            <button class="btn btn-warning mx-2" onclick="editUser(${i})"><i class="fa-solid fa-pen"></i></button>
+            <button class="btn btn-danger" onclick="confirmDelete(${i})"><i class="fa-solid fa-trash"></i></button>
+          </td>
+        </tr>
+      `).join('');
+        }
+
+        addUserBtn.addEventListener('click', () => {
+            const username = addUsername.value.trim();
+            const email = addEmail.value.trim();
+            const password = addPassword.value.trim();
+            if (username && email && password) {
+                users.push({ username, email, password });
+                renderTable();
+                addUserModal.hide();
+                addUsername.value = '';
+                addEmail.value = '';
+                addPassword.value = '';
+            }
+        });
+
+        function editUser(index) {
+            editIndex = index;
+            const user = users[index];
+            editUsername.value = user.username;
+            editEmail.value = user.email;
+            editPassword.value = user.password;
+            editUserModal.show();
+        }
+
+        saveEditBtn.addEventListener('click', () => {
+            if (editIndex >= 0) {
+                users[editIndex] = {
+                    username: editUsername.value.trim(),
+                    email: editEmail.value.trim(),
+                    password: editPassword.value.trim()
+                };
+                renderTable();
+                editUserModal.hide();
+            }
+        });
+
+        function confirmDelete(index) {
+            deleteIndex = index;
+            deleteConfirmModal.show();
+        }
+
+        confirmDeleteBtn.addEventListener('click', () => {
+            if (deleteIndex >= 0) {
+                users.splice(deleteIndex, 1);
+                renderTable();
+                deleteConfirmModal.hide();
+            }
+        });
+
+        function viewUser(index) {
+            const user = users[index];
+            viewUsername.textContent = user.username;
+            viewEmail.textContent = user.email;
+            viewPassword.textContent = user.password;
+            viewUserModal.show();
+        }
+
+    </script>
+</body>
+
+</html>
