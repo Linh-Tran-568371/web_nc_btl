@@ -1,0 +1,95 @@
+body {
+  background-color: #121212;
+  color: white;
+}
+
+.list-group-item img {
+  width: 60px;
+  height: 80px;
+  object-fit: cover;
+  margin-right: 10px;
+  vertical-align: middle;
+}
+
+.list-group-item span {
+  vertical-align: middle;
+}
+
+.btn-fix {
+  padding: 8px 16px;
+  min-width: 100px;
+  white-space: nowrap; /* Không xuống dòng */
+  font-size: 14px;
+}
+
+/* ==== TÌM KIẾM ==== */
+.search-input {
+  border-radius: 20px;
+  padding-right: 40px;
+  padding-left: 12px;
+  border: 1px solid #ced4da;
+  transition: all 0.3s ease;
+}
+
+.search-input:focus {
+  outline: none;
+  box-shadow: 0 0 6px rgba(0, 255, 157, 0.6);
+  border-color: #20c997;
+}
+
+.search-input-icon {
+  position: absolute;
+  right: 100px; 
+  top: 50%;
+  transform: translateY(-50%);
+  color: #6c757d;
+  pointer-events: none;
+  transition: opacity 0.2s ease;
+  font-size: 16px;
+  z-index: 5;
+}
+
+.search-input:focus + .search-input-icon {
+  opacity: 0;
+}
+
+.search-icon-button {
+  position: absolute;
+  right: 85px;
+  top: 50%;
+  transform: translateY(-50%);
+  background: transparent;
+  border: none;
+  color: #6c757d;
+  cursor: pointer;
+  font-size: 16px;
+  transition: color 0.3s ease;
+}
+
+.search-icon-button:hover {
+  color: #20c997;
+}
+
+.navbar form button[type="submit"] {
+  border-radius: 20px;
+  padding: 5px 12px;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+.navbar form button:hover {
+  background-color: #198754;
+  color: white;
+  transform: scale(1.05);
+}
+
+/* ==== LOGIN BUTTON ==== */
+#loginButton {
+  transition: background-color 0.3s ease, color 0.3s ease;
+  border-radius: 20px;
+  padding: 5px 12px;
+}
+
+#loginButton:hover {
+  background-color: white;
+  color: #000;
+}
